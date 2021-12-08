@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Piano</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="piano">
+        <h1>Let's Play Piano</h1>
+        <div class="input-box">
+            <input type="text" id="chords">
+            <button class="btn" onclick="saveChords()">Save</button>
+        </div>
+
+        <div class="btn-box">
+            <button class="btn" onclick="run('Do')">Do</button>
+            <button class="btn" onclick="run('Re')">Re</button>
+            <button class="btn" onclick="run('Mi')">Mi</button>
+            <button class="btn" onclick="run('Fa')">Fa</button>
+            <button class="btn" onclick="run('Sol')">Sol</button>
+            <button class="btn" onclick="run('La')">La</button>
+            <button class="btn" onclick="run('Ti')">Ti</button>
+            <button class="btn" onclick="run('Doo')">Doo</button>
+        </div>
+
+        <div class="output">
+            <ul id="list"></ul>
+        </div>
+    </div>
+
+    <script>
+        let chords = document.getElementById("chords");
+        let pianoMemo = [];
+        let list = document.getElementById("list");
+        let btn = document.querySelectorAll(".btn");
+
+        function run(x){
+            let a = new Audio(`audio/${x}.mp3`);
+            a.play();
+            chords.value += x + ",";
+            // console.log(`u played ${x} key`);
+        }
+
+        function saveChords(){
+            let inputChords = chords.value;
+            pianoMemo.push(inputChords);
+            // console.log(`u saved ${inputChords}`);
+            chords.value = "";
+            list.innerHTML = "";
+            pianoMemo.map(function(el,index){
+                list.innerHTML += `<li>${el} <button class="btn replay" onclick="rePlay(${index})">Replay</button></li>`
+            });
+        }
+
+        let m = ["do","yay","mi"]
+
+
+        function runMemory(arr,delay=500){
+            let d = delay;
+            arr.map(function(el,index){
+                setTimeout(run,d,el);
+                d += delay;
+            });
+        }
+
+        function rePlay(x){
+            let current = pianoMemo[x].split(",");
+            // let tempo = prompt("Please input tempo in milisec");
+            current.pop();
+            runMemory(current);
+        }
+
+        document.addEventListener("keyup", function(e){
+            // console.log(e.keyCode);
+            let current = e.keyCode;
+            if(current == 81){
+                run('Do');
+            }else if( current == 87){
+                run('Re');
+            }else if( current == 69){
+                run('Mi');
+            }else if( current == 82){
+                run('Fa');
+            }else if( current == 65){
+                run('Sol');
+            }else if( current == 83){
+                run('La');
+            }else if( current == 68){
+                run('Ti');
+            }else if( current == 70){
+                run('Doo');
+            }else if( current == 13){
+                saveChords();
+            }
+        });
+        
+    </script>
+    
+</body>
+</html>
